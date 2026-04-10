@@ -2,16 +2,14 @@ import { useState } from "react";
 import Header from "./components/Header";
 import TaskCard from "./components/TaskCard";
 import AddTaskForm from "./components/AddTaskForm";
-
+import { colors, buttonStyle } from "./styles";
 function App() {
   const [tasks, setTasks] = useState([
     { id: 1, title: "Learn React", description: "Complete the basics", priority: "high", completed: false },
     { id: 2, title: "Setup project", description: "Already done!", priority: "low", completed: true },
     { id: 3, title: "Add features", description: "Coming soon", priority: "medium", completed: false },
   ]);
-
   const [filter, setFilter] = useState("all");
-
   function addTask(title, description, priority) {
     const newTask = {
       id: Date.now(),
@@ -22,7 +20,6 @@ function App() {
     };
     setTasks(prev => [...prev, newTask]);
   }
-
   function toggleTask(id) {
     setTasks(prev =>
       prev.map(task =>
@@ -30,29 +27,67 @@ function App() {
       )
     );
   }
-
   function deleteTask(id) {
     setTasks(prev => prev.filter(task => task.id !== id));
   }
-
   const filteredTasks = tasks.filter(task => {
     if (filter === "active") return !task.completed;
     if (filter === "completed") return task.completed;
     return true;
   });
-
+  const completedCount = tasks.filter(task => task.completed).length;
+  const containerStyle = {
+    maxWidth: "600px",
+    margin: "0 auto",
+    padding: "20px",
+    backgroundColor: colors.background,
+    minHeight: "100vh",
+  };
+  const filterContainerStyle = {
+    display: "flex",
+    gap: "10px",
+    marginBottom: "15px",
+  };
+  const activeButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: colors.primary,
+    color: "white",
+  };
+  const inactiveButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#ddd",
+  };
+  const taskCountStyle = {
+    marginBottom: "15px",
+    fontWeight: "bold",
+  };
   return (
-    <div>
+    <div style={containerStyle}>
       <Header />
-
       <AddTaskForm addTask={addTask} />
-
-      <div>
-        <button onClick={() => setFilter("all")}>All</button>
-        <button onClick={() => setFilter("active")}>Active</button>
-        <button onClick={() => setFilter("completed")}>Completed</button>
+      <p style={taskCountStyle}>
+        {tasks.length} tasks ({completedCount} completed)
+      </p>
+      <div style={filterContainerStyle}>
+        <button
+          style={filter === "all" ? activeButtonStyle : inactiveButtonStyle}
+          onClick={() => setFilter("all")}
+        >
+          All
+        </button>
+        <button
+          style={filter === "active" ? activeButtonStyle : inactiveButtonStyle}
+          onClick={() => setFilter("active")}
+        >
+          Active
+        </button>
+        <button
+          style={filter === "completed" ? activeButtonStyle : inactiveButtonStyle}
+          onClick={() => setFilter("completed")}
+        >
+          Completed
+        </button>
       </div>
-
       {filteredTasks.map(task => (
         <TaskCard
           key={task.id}
@@ -64,5 +99,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
