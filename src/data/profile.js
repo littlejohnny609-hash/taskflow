@@ -3,39 +3,37 @@ export const profile = {
   title: "Frontend Developer | Self-Taught IT & Web Development Student",
 
   summary:
-    "Detail-oriented freelancer building skills in HTML, CSS, and JavaScript.",
+    "Detail-oriented freelancer building skills in HTML, CSS, JavaScript, and React.",
 
   education:
-    "Bachelor-level self-study in IT & Web Development (Ongoing)",
+    "Self-taught IT & Web Development Student (Ongoing)",
 
   skills: [
     "HTML",
     "CSS",
     "JavaScript",
+    "React",
     "C++",
     "Microsoft Excel",
-    "Google Workspace",
   ],
 
   strongPoints: [
     {
       point: "Hardworking",
-      description: "I can work long hours and stay focused.",
+      description: "I stay focused and complete tasks efficiently.",
     },
     {
       point: "Fast Learner",
-      description: "I pick up new skills quickly.",
+      description: "I quickly understand and apply new concepts.",
     },
     {
-      point: "Healthy & Reliable",
-      description: "I rarely get sick and always show up.",
+      point: "Reliable",
+      description: "I consistently deliver what is expected.",
     },
   ],
 
   contact: {
     email: "littlejohnny609@gmail.com",
-    github: "https://github.com/littlejohnny609",
+    github: "https://github.com/littlejohnny609-Hash",
   },
 };
-}
-export default profile;
