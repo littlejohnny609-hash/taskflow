@@ -37,3 +37,5 @@ export const profile = {
     github: "https://github.com/littlejohnny609",
   },
 };
+}
+export default profile;
