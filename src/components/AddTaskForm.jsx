@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useState } from "react"
 
-function AddTaskForm({ addTask }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [notes, setNotes] = useState("");
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
+
+export default function AddTaskForm({ addTask }) {
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [priority, setPriority] = useState("medium")
+  const [dueDate, setDueDate] = useState("")
+  const [category, setCategory] = useState("")
+  const [notes, setNotes] = useState("")
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!title.trim()) return;
+    if (!title.trim()) return
 
-    const newTask = {
+    addTask({
       id: Date.now(),
       title,
       description,
@@ -23,66 +35,68 @@ function AddTaskForm({ addTask }) {
       notes,
       completed: false,
       createdAt: new Date().toISOString(),
-    };
+    })
 
-    addTask(newTask);
-
-    // reset form
-    setTitle("");
-    setDescription("");
-    setPriority("medium");
-    setDueDate("");
-    setCategory("");
-    setNotes("");
+    setTitle("")
+    setDescription("")
+    setPriority("medium")
+    setDueDate("")
+    setCategory("")
+    setNotes("")
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      
-      <input
-        type="text"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+    <Card className="max-w-md mx-auto shadow-lg rounded-2xl">
+      <CardContent className="p-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
-      <input
-        type="text"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
+          <Input
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
+          <Input
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
-      <input
-        type="date"
-        value={dueDate}
-        onChange={(e) => setDueDate(e.target.value)}
-      />
+          <Select value={priority} onValueChange={setPriority}>
+            <SelectTrigger>
+              <SelectValue placeholder="Priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+            </SelectContent>
+          </Select>
 
-      <input
-        type="text"
-        placeholder="Category (e.g. Work, Study)"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      />
+          <Input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
 
-      <textarea
-        placeholder="Notes"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-      />
+          <Input
+            placeholder="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
 
-      <button type="submit">
-        Add Task
-      </button>
-    </form>
-  );
+          <Textarea
+            placeholder="Notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+
+          <Button type="submit" className="w-full">
+            Add Task
+          </Button>
+
+        </form>
+      </CardContent>
+    </Card>
+  )
 }
-
-export default AddTaskForm;

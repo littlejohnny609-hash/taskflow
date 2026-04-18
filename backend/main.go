@@ -11,10 +11,19 @@ import (
 )
 
 type Portfolio struct {
-	Name    string   `json:"name"`
-	Title   string   `json:"title"`
-	Summary string   `json:"summary"`
-	Skills  []string `json:"skills"`
+	Name      string   `json:"name"`
+	Title     string   `json:"title"`
+	Summary   string   `json:"summary"`
+	Education string   `json:"education"`
+	Skills    []string `json:"skills"`
+	StrongPoints []struct {
+		Point       string `json:"point"`
+		Description string `json:"description"`
+	} `json:"strongPoints"`
+	Contact struct {
+		Email  string `json:"email"`
+		Github string `json:"github"`
+	} `json:"contact"`
 }
 
 func main() {
@@ -27,10 +36,10 @@ func main() {
 
 	r := gin.Default()
 
-	// CORS
+	// CORS (IMPORTANT: allow POST now)
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
-		AllowMethods: []string{"GET"},
+		AllowMethods: []string{"GET", "POST"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
 
@@ -58,6 +67,9 @@ func main() {
 		}
 		generatePDF(c, portfolio)
 	})
+
+	// ✅ AI CHAT ROUTE (MUST be inside main)
+	r.POST("/chat", chatHandler)
 
 	// PORT (for deployment)
 	port := os.Getenv("PORT")
