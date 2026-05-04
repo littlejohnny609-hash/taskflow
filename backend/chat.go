@@ -24,7 +24,7 @@ func chatHandler(c *gin.Context) {
 		return
 	}
 	ollamaReq := OllamaRequest{
-		Model:  "mistral",
+		Model: "phi",
 		Prompt: req.Message,
 		Stream: false,
 	}
@@ -33,7 +33,7 @@ func chatHandler(c *gin.Context) {
 		"http://localhost:11434/api/generate",
 		"application/json",
 		bytes.NewBuffer(jsonData),
-	
+	)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Ollama not running"})
 		return
