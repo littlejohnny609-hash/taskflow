@@ -3,7 +3,6 @@ import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
 import { colors, buttonStyle } from "../styles";
 import TaskStats from "../components/TaskStats";
-
 function TasksPage() {
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("taskflow-tasks");
@@ -36,12 +35,10 @@ function TasksPage() {
           },
         ];
   });
-
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [showForm, setShowForm] = useState(false);
-
   // Save to localStorage
   useEffect(() => {
     localStorage.setItem("taskflow-tasks", JSON.stringify(tasks));
@@ -54,16 +51,13 @@ function TasksPage() {
         setShowForm(true);
       }
     }
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-
   // Add task (UPDATED for full object support)
   function addTask(task) {
     setTasks((prev) => [...prev, task]);
   }
-
   function toggleTask(id) {
     setTasks((prev) =>
       prev.map((task) =>
@@ -73,11 +67,9 @@ function TasksPage() {
       )
     );
   }
-
   function deleteTask(id) {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   }
-
   function editTask(id, updatedData) {
     setTasks((prev) =>
       prev.map((task) =>
@@ -85,12 +77,10 @@ function TasksPage() {
       )
     );
   }
-
   function clearAllTasks() {
     setTasks([]);
     localStorage.removeItem("taskflow-tasks");
   }
-
   // FILTER + SEARCH + SORT (OPTIMIZED)
   const filteredTasks = useMemo(() => {
     return tasks
@@ -101,11 +91,9 @@ function TasksPage() {
             : filter === "active"
             ? !task.completed
             : task.completed;
-
         const matchesSearch = task.title
           .toLowerCase()
           .includes(searchQuery.toLowerCase());
-
         return matchesFilter && matchesSearch;
       })
       .sort((a, b) => {
@@ -118,11 +106,8 @@ function TasksPage() {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
   }, [tasks, filter, searchQuery, sortBy]);
-
   const completedCount = tasks.filter((task) => task.completed).length;
-
   const isMobile = window.innerWidth < 600;
-
   const containerStyle = {
     maxWidth: "600px",
     margin: "0 auto",
@@ -130,36 +115,29 @@ function TasksPage() {
     backgroundColor: colors.background,
     minHeight: "100vh",
   };
-
   const filterContainerStyle = {
     display: "flex",
     gap: "10px",
     marginBottom: "15px",
     flexWrap: isMobile ? "wrap" : "nowrap",
   };
-
   const activeButtonStyle = {
     ...buttonStyle,
     backgroundColor: colors.primary,
     color: "white",
   };
-
   const inactiveButtonStyle = {
     ...buttonStyle,
     backgroundColor: "#ddd",
   };
-
   const taskCountStyle = {
     marginBottom: "15px",
     fontWeight: "bold",
   };
-
   return (
     <div style={containerStyle}>
-
       {/* Stats */}
       <TaskStats tasks={tasks} />
-
       {/* Search */}
       <input
         placeholder="Search tasks..."
@@ -167,7 +145,6 @@ function TasksPage() {
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
       />
-
       {/* Sort */}
       <select
         value={sortBy}
@@ -178,16 +155,13 @@ function TasksPage() {
         <option value="dueDate">Due Date</option>
         <option value="priority">Priority</option>
       </select>
-
       {/* Add Task */}
       {showForm && (
         <AddTaskForm addTask={addTask} />
       )}
-
       <p style={taskCountStyle}>
         {tasks.length} tasks ({completedCount} completed)
       </p>
-
       {/* Filter Buttons */}
       <div style={filterContainerStyle}>
         <button
@@ -196,14 +170,12 @@ function TasksPage() {
         >
           All
         </button>
-
         <button
           style={filter === "active" ? activeButtonStyle : inactiveButtonStyle}
           onClick={() => setFilter("active")}
         >
           Active
         </button>
-
         <button
           style={filter === "completed" ? activeButtonStyle : inactiveButtonStyle}
           onClick={() => setFilter("completed")}
@@ -227,7 +199,6 @@ function TasksPage() {
           editTask={editTask}
         />
       ))}
-
     </div>
   );
 }

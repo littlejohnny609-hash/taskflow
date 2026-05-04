@@ -1,55 +1,44 @@
 import { Routes, Route } from "react-router-dom"
-
 import Header from "./components/Header"
 import TasksPage from "./pages/TasksPage"
 import AboutPage from "./pages/AboutPage"
 import NotFoundPage from "./pages/NotFoundPage"
 import Home from "./pages/Home"
 import AIChatPage from "./pages/AIChatPage"
-
-// (Optional future pages – create later)
-// import QRPage from "./pages/QRPage"
-// import ScrapePage from "./pages/ScrapePage"
-// import AutomationPage from "./pages/AutomationPage"
-
 function App() {
+  const handleClick = () => {
+    alert("Button is working 🚀")
+  }
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      
+
       {/* Global Header */}
       <Header />
-
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6">
+
+        {/* 🔴 TAILWIND TEST BLOCK */}
+        <div className="p-6 bg-red-500 text-white font-bold mb-4">
+          TAILWIND WORKS
+        </div>
+
+        {/* 🧪 BASIC BUTTON TEST (NOW CLICKABLE) */}
+        <button
+          className="px-4 py-2 bg-black text-white rounded mb-6"
+          onClick={handleClick}
+        >
+          BASIC BUTTON
+        </button>
         <Routes>
-
-          {/* Main App */}
           <Route path="/" element={<TasksPage />} />
-
-          {/* About */}
           <Route path="/about" element={<AboutPage />} />
-
-          {/* Portfolio */}
           <Route path="/portfolio" element={<Home />} />
-
-          {/* AI Chatbot Page */}
           <Route path="/ai-chat" element={<AIChatPage />} />
-
-          {/* Future Pages */}
-          {/*
-          <Route path="/qr" element={<QRPage />} />
-          <Route path="/scrape" element={<ScrapePage />} />
-          <Route path="/automation" element={<AutomationPage />} />
-          */}
-
-          {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
-
         </Routes>
-      </main>
 
+      </main>
     </div>
   )
 }
-
 export default App
