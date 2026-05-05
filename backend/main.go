@@ -10,11 +10,11 @@ import (
 	"github.com/joho/godotenv"
 )
 type Portfolio struct {
-	Name        string   `json:"name"`
-	Title       string   `json:"title"`
-	Summary     string   `json:"summary"`
-	Education   string   `json:"education"`
-	Skills      []string `json:"skills"`
+	Name    string   `json:"name"`
+	Title   string   `json:"title"`
+	Summary string   `json:"summary"`
+	Education string `json:"education"`
+	Skills  []string `json:"skills"`
 	StrongPoints []struct {
 		Point       string `json:"point"`
 		Description string `json:"description"`
@@ -26,8 +26,7 @@ type Portfolio struct {
 }
 func main() {
 	// Load env
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
 	// Release mode
@@ -35,7 +34,7 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
-	// Security proxy config
+	// Safe proxy config
 	r.SetTrustedProxies([]string{"127.0.0.1"})
 	// CORS
 	r.Use(cors.New(cors.Config{
@@ -54,9 +53,7 @@ func main() {
 	r.GET("/portfolio", func(c *gin.Context) {
 		portfolio, err := fetchPortfolio()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusOK, portfolio)
@@ -72,9 +69,9 @@ func main() {
 	})
 	// AI Chat
 	r.POST("/chat", chatHandler)
-	// SCRAPER ROUTE
+	// SCRAPER
 	r.POST("/scrape", scrapeHandler)
-	// Port
+	// PORT
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -82,20 +79,19 @@ func main() {
 	log.Println("🚀 Server running on port:", port)
 	r.Run(":" + port)
 }
-//
 // ============================
-// SCRAPER HANDLER (FIXED)
+// SCRAPER HANDLER
 // ============================
-//
 func scrapeHandler(c *gin.Context) {
-	// Run Node scraper
-	cmd := exec.Command("node", "scraper.js")
+	log.Println("SCRAPER RUNNING: scraper.cjs") // DEBUG LOG ✔
+	cmd := exec.Command("node", "scraper.cjs")
 	cmd.Dir = "."
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &out
 	err := cmd.Run()
 	if err != nil {
+		log.Println("Scraper error:", err)
 		c.JSON(500, gin.H{
 			"error":  "Scraper failed",
 			"detail": out.String(),

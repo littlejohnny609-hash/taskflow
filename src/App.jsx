@@ -6,6 +6,7 @@ import NotFoundPage from "./pages/NotFoundPage"
 import Home from "./pages/Home"
 import AIChatPage from "./pages/AIChatPage"
 import QRPage from "./pages/QRPage"
+import ScraperPage from "./pages/ScraperPage"
 function App() {
   const handleClick = () => {
     alert("Button is working 🚀")
@@ -34,6 +35,7 @@ function App() {
           <Route path="/portfolio" element={<Home />} />
           <Route path="/ai-chat" element={<AIChatPage />} />
           <Route path="/qr" element={<QRPage />} />
+          <Route path="/scraper" element={<ScraperPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
