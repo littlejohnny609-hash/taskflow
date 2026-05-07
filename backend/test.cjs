@@ -1,8 +1,14 @@
-const { chromium } = require("playwright");
+const puppeteer = require("puppeteer");
 (async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-  await page.goto("https://example.com");
-  console.log("Page loaded successfully");
-  await browser.close();
+  try {
+    const browser = await puppeteer.launch({
+      headless: "new"
+    });
+    const page = await browser.newPage();
+    await page.goto("https://example.com");
+    console.log("Browser working ✅");
+    await browser.close();
+  } catch (err) {
+    console.error("Error:", err);
+  }
 })();

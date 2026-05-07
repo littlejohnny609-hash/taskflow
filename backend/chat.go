@@ -1,5 +1,6 @@
 package main
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -14,19 +15,18 @@ type OllamaRequest struct {
 	Prompt string `json:"prompt"`
 	Stream bool   `json:"stream"`
 }
-type OllamaResponse struct {
-	Response string `json:"response"`
-}
 func chatHandler(c *gin.Context) {
 	var req ChatRequest
-	if err := c.BindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": "Invalid request"})
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request",
+		})
 		return
 	}
 	ollamaReq := OllamaRequest{
-		Model: "phi",
+		Model:  "phi",
 		Prompt: req.Message,
-		Stream: false,
+		Stream: true, // IMPORTANT for real responses
 	}
 	jsonData, _ := json.Marshal(ollamaReq)
 	resp, err := http.Post(
@@ -35,14 +35,33 @@ func chatHandler(c *gin.Context) {
 		bytes.NewBuffer(jsonData),
 	)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Ollama not running"})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Ollama not running",
+		})
 		return
 	}
 	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
-	var ollamaResp OllamaResponse
-	json.Unmarshal(body, &ollamaResp)
-	c.JSON(200, gin.H{
-		"reply": ollamaResp.Response,
+	reader := bufio.NewReader(resp.Body)
+	var fullResponse string
+	for {
+		line, err := reader.ReadBytes('\n')
+		if err != nil && err != io.EOF {
+			break
+		}
+		var data map[string]interface{}
+		if json.Unmarshal(line, &data) == nil {
+			if respText, ok := data["response"].(string); ok {
+				fullResponse += respText
+			}
+			if done, ok := data["done"].(bool); ok && done {
+				break
+			}
+		}
+		if err == io.EOF {
+			break
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"reply": fullResponse,
 	})
 }
