@@ -94,7 +94,6 @@ func scrapeHandler(c *gin.Context) {
 // ============================
 //
 func autoApplyHandler(c *gin.Context) {
-\
 	log.Println("🤖 AUTO APPLY RUNNING: autoapply.cjs")
 	cmd := exec.Command("node", "autoapply.cjs")
 	cmd.Dir = "."
