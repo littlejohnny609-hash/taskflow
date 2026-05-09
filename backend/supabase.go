@@ -9,7 +9,6 @@ import (
 func fetchPortfolio() (*Portfolio, error) {
 	supabaseURL := os.Getenv("SUPABASE_URL")
 	supabaseKey := os.Getenv("SUPABASE_KEY")
-
 	if supabaseURL == "" || supabaseKey == "" {
 		return nil, fmt.Errorf("missing SUPABASE env variables")
 	}
