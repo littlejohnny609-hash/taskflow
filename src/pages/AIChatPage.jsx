@@ -1,39 +1,49 @@
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 export default function AIChatPage() {
-  const [message, setMessage] = useState("")
-  const [chat, setChat] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("");
+  const [chat, setChat] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "https://taskflow-can3.onrender.com";
   const sendMessage = async () => {
-    if (!message.trim()) return
-    const text = message
-    setMessage("")
-    setChat(prev => [...prev, { role: "user", text }])
-    setLoading(true)
+    if (!message.trim()) return;
+    const text = message;
+    setMessage("");
+    setChat((prev) => [...prev, { role: "user", text }]);
+    setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/chat", {
+      const res = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-      })
-      if (!res.ok) throw new Error("Server error")
-
-      const data = await res.json()
-      setChat(prev => [
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: text }),
+      });
+      if (!res.ok) throw new Error("Server error");
+      const data = await res.json();
+      setChat((prev) => [
         ...prev,
-        { role: "ai", text: data.reply || "No response from AI" }
-      ])
+        {
+          role: "ai",
+          text: data.reply || "No response from AI",
+        },
+      ]);
     } catch (error) {
-      setChat(prev => [
+      setChat((prev) => [
         ...prev,
-        { role: "ai", text: "❌ Error connecting to server" }
-      ])
+        {
+          role: "ai",
+          text: "❌ Error connecting to AI server",
+        },
+      ]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">AI Chatbot</h1>
@@ -45,7 +55,6 @@ export default function AIChatPage() {
               Start a conversation...
             </p>
           )}
-
           {chat.map((msg, index) => (
             <div
               key={index}
@@ -59,7 +68,9 @@ export default function AIChatPage() {
             </div>
           ))}
           {loading && (
-            <p className="text-sm text-gray-500">AI is typing...</p>
+            <p className="text-sm text-gray-500">
+              AI is typing...
+            </p>
           )}
         </CardContent>
       </Card>
@@ -76,5 +87,5 @@ export default function AIChatPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }
