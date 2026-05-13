@@ -2,16 +2,23 @@ import { useState } from "react";
 export default function ScraperPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "https://taskflow-can3.onrender.com";
   const runScrape = async () => {
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch("http://localhost:8080/scrape", {
+      const res = await fetch(`${API_URL}/scrape`, {
         method: "POST",
       });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
       const data = await res.json();
       setResult(data);
     } catch (err) {
+      console.error(err);
       setResult({ error: "Backend not reachable" });
     } finally {
       setLoading(false);
