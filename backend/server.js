@@ -2,8 +2,11 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+
 dotenv.config();
+
 const app = express();
+
 /* =========================
    CORS
 ========================= */
@@ -12,8 +15,10 @@ app.use(cors({
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
 }));
+
 app.options("*", cors());
 app.use(express.json());
+
 /* =========================
    HEALTH CHECK
 ========================= */
@@ -23,6 +28,7 @@ app.get("/", (req, res) => {
     message: "Taskflow backend running 🚀",
   });
 });
+
 /* =========================
    PORTFOLIO ROUTE
 ========================= */
@@ -36,12 +42,12 @@ app.get("/portfolio", (req, res) => {
     ]
   });
 });
+
 /* =========================
    SCRAPE ROUTE
 ========================= */
 app.post("/scrape", async (req, res) => {
   try {
-    // Example response (replace with real scraper later)
     return res.json({
       success: true,
       message: "Scrape completed",
@@ -54,19 +60,23 @@ app.post("/scrape", async (req, res) => {
     });
   }
 });
+
 /* =========================
    AUTO APPLY ROUTE
 ========================= */
 app.post("/autoapply", async (req, res) => {
   try {
     const { url } = req.body;
+
     if (!url) {
       return res.status(400).json({ error: "URL required" });
     }
+
     return res.json({
       success: true,
       message: `Application simulated for ${url}`
     });
+
   } catch (error) {
     return res.status(500).json({
       error: "Auto apply failed",
@@ -74,24 +84,31 @@ app.post("/autoapply", async (req, res) => {
     });
   }
 });
+
 /* =========================
-   OPENAI ROUTE
+   OPENAI SETUP
 ========================= */
 if (!process.env.OPENAI_API_KEY) {
   console.error("❌ OPENAI_API_KEY missing");
-}
 } else {
   console.log("✅ OPENAI KEY LOADED");
 }
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+/* =========================
+   OPENAI CHAT ROUTE
+========================= */
 app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
+
     if (!message) {
       return res.status(400).json({ error: "Message required" });
     }
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -99,9 +116,11 @@ app.post("/api/chat", async (req, res) => {
         { role: "user", content: message }
       ],
     });
+
     return res.json({
       reply: response.choices[0].message.content
     });
+
   } catch (error) {
     console.error("AI ERROR:", error.message);
     return res.status(500).json({
@@ -110,10 +129,12 @@ app.post("/api/chat", async (req, res) => {
     });
   }
 });
+
 /* =========================
    START SERVER
 ========================= */
 const PORT = process.env.PORT || 10000;
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
