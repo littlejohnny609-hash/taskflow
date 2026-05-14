@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PortfolioCard from "../components/PortfolioCard";
 function Home() {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
@@ -28,7 +27,10 @@ function Home() {
   }
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <PortfolioCard profile={profile} />
+      <div className="bg-white p-6 rounded shadow">
+        <h1>{profile.name}</h1>
+        <p>{profile.title}</p>
+      </div>
     </div>
   );
 }
